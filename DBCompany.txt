@@ -1,0 +1,468 @@
+show databases;
++----------------------------+
+| Database                   |
++----------------------------+
+| information_schema         |
+| 4AL18CS064                 |
+| 4AL19CS009_companydb       |
+| 4al19cs070_companydatabase |
+| A                          |
+| Accident                   |
+| STUDENT                    |
+| cat                        |
+| chibag                     |
+| eat                        |
+| mat                        |
+| megha                      |
+| mysql                      |
+| performance_schema         |
+| rat                        |
+| root                       |
+| student                    |
+| students                   |
+| sys                        |
++----------------------------+
+19 rows in set (0.04 sec)
+
+mysql> create database 4AL19CS039_Company;
+Query OK, 1 row affected (0.00 sec)
+
+mysql> use 4AL19CS039_Compan;
+ERROR 1049 (42000): Unknown database '4AL19CS039_Compan'
+mysql> use 4AL19CS039_Company;
+Database changed
+mysql> create table Employee(ssn varchar(10) primary key, fname varchar(10), lname varchar(10), address varchar(20), sex varchar(10), salary int, superssn varchar(10), foreign key(superssn) references employee(ssn));
+ERROR 1215 (HY000): Cannot add foreign key constraint
+mysql> create table Employee(ssn varchar(10) primary key, fname varchar(10), lname varchar(10), address varchar(20), sex varchar(10), salary int, superssn varchar(10), foreign key(superssn) references Employee(ssn));
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> desc Employee;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| ssn      | varchar(10) | NO   | PRI | NULL    |       |
+| fname    | varchar(10) | YES  |     | NULL    |       |
+| lname    | varchar(10) | YES  |     | NULL    |       |
+| address  | varchar(20) | YES  |     | NULL    |       |
+| sex      | varchar(10) | YES  |     | NULL    |       |
+| salary   | int(11)     | YES  |     | NULL    |       |
+| superssn | varchar(10) | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+7 rows in set (0.00 sec)
+
+mysql> create table Department(DNo varchar(10) primary key, DName varchar(20), mgrs varchar(20), mgrsstartdate date, foreign key(mgrs) references Employee(ss));
+ERROR 1215 (HY000): Cannot add foreign key constraint
+mysql> create table Department(DNo varchar(10) primary key, DName varchar(20), mgrs varchar(20), mgrsstartdate date, foreign key(mgrs) references Employee(ssn));
+Query OK, 0 rows affected (0.41 sec)
+
+mysql> desc Department;
++---------------+-------------+------+-----+---------+-------+
+| Field         | Type        | Null | Key | Default | Extra |
++---------------+-------------+------+-----+---------+-------+
+| DNo           | varchar(10) | NO   | PRI | NULL    |       |
+| DName         | varchar(20) | YES  |     | NULL    |       |
+| mgrs          | varchar(20) | YES  | MUL | NULL    |       |
+| mgrsstartdate | date        | YES  |     | NULL    |       |
++---------------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> alter table Employee add constraint foreign key(DNo) references Department(DNo);
+ERROR 1072 (42000): Key column 'DNo' doesn't exist in table
+mysql> alter table Employee add column DNo varchar(10);
+Query OK, 0 rows affected (0.39 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table Employee add constraint foreign key(DNo) references Department(DNo);
+Query OK, 0 rows affected (0.67 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc Employee;                                                                                                                          +----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| ssn      | varchar(10) | NO   | PRI | NULL    |       |
+| fname    | varchar(10) | YES  |     | NULL    |       |
+| lname    | varchar(10) | YES  |     | NULL    |       |
+| address  | varchar(20) | YES  |     | NULL    |       |
+| sex      | varchar(10) | YES  |     | NULL    |       |
+| salary   | int(11)     | YES  |     | NULL    |       |
+| superssn | varchar(10) | YES  | MUL | NULL    |       |
+| DNo      | varchar(10) | YES  | MUL | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+8 rows in set (0.00 sec)
+
+mysql> create table DLocation(DNo varchar(10), DLoc varchar(20), foreign key(DNo) references Department(DNo), primary key(DNo, DLoc));
+Query OK, 0 rows affected (0.57 sec)
+
+mysql> desc DLocation;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| DNo   | varchar(10) | NO   | PRI | NULL    |       |
+| DLoc  | varchar(20) | NO   | PRI | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> create table Project(PNo varchar(20) primary key, PName varchar(20), PLocation varchar(20), DNo varchar(10), foreign key(DNo) references Department(DNo));
+Query OK, 0 rows affected (0.24 sec)
+
+mysql> desc Project;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| PNo       | varchar(20) | NO   | PRI | NULL    |       |
+| PName     | varchar(20) | YES  |     | NULL    |       |
+| PLocation | varchar(20) | YES  |     | NULL    |       |
+| DNo       | varchar(10) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> create table WorksOn(ssn varchar(10), PNo varchar(20), hours varchar(20), foreign key(ssn) references Employee(ssn), foreign key(PNo) references Project(PNo), primary key(ssn, PNo));
+Query OK, 0 rows affected (0.23 sec)
+
+mysql> desc WorksOn;
++-------+-------------+------+-----+---------+-------+
+| Field | Type        | Null | Key | Default | Extra |
++-------+-------------+------+-----+---------+-------+
+| ssn   | varchar(10) | NO   | PRI | NULL    |       |
+| PNo   | varchar(20) | NO   | PRI | NULL    |       |
+| hours | varchar(20) | YES  |     | NULL    |       |
++-------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into Employee values("001", "Andrea", "Marshall", "California", "Female", '300000',NULL, NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("002", "Damon", "Salvetore", "Virgenia", "Male", '600000','001', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("003", "Elena", "Gilbert", "Mystic Falls", "Female", '600000','001', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("004", "Caroline", "Forbes", "Mystic Falls", "Female", '700000','001', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("005", "Marcel", "Gerard", "Ohio", "Male", '500000','001', NULL);
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into Employee values("006", "Elijah", "Mikelson", "Mystic Falls", "Male", '800000','001', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("007", "Kol", "Mikelson", "Mystic Falls", "Male", '600000','006', NULL);
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into Employee values("008", "Cami", "Scott", "New Orleans", "Female", '700000','004', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("009", "Shawn", "Scott", "New Orleans", "Male", '650000','004', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("010", "Klause", "Mikelson", "Mystic Falls", "Male", '100000','006', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Employee values("011", "Rebekah", "Mikelson", "Mystic Falls", "Female", '800000','006', NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from Employee;
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| ssn | fname    | lname     | address      | sex    | salary | superssn | DNo  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| 001 | Andrea   | Marshall  | California   | Female | 300000 | NULL     | NULL |
+| 002 | Damon    | Salvetore | Virgenia     | Male   | 600000 | 001      | NULL |
+| 003 | Elena    | Gilbert   | Mystic Falls | Female | 600000 | 001      | NULL |
+| 004 | Caroline | Forbes    | Mystic Falls | Female | 700000 | 001      | NULL |
+| 005 | Marcel   | Gerard    | Ohio         | Male   | 500000 | 001      | NULL |
+| 006 | Elijah   | Mikelson  | Mystic Falls | Male   | 800000 | 001      | NULL |
+| 007 | Kol      | Mikelson  | Mystic Falls | Male   | 600000 | 006      | NULL |
+| 008 | Cami     | Scott     | New Orleans  | Female | 700000 | 004      | NULL |
+| 009 | Shawn    | Scott     | New Orleans  | Male   | 650000 | 004      | NULL |
+| 010 | Klause   | Mikelson  | Mystic Falls | Male   | 100000 | 006      | NULL |
+| 011 | Rebekah  | Mikelson  | Mystic Falls | Female | 800000 | 006      | NULL |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+11 rows in set (0.00 sec)
+
+mysql> insert into Department values("001", "Accounts", '001', '12-09-2000');
+ERROR 1292 (22007): Incorrect date value: '12-09-2000' for column 'mgrsstartdate' at row 1
+mysql> insert into Department values("001", "Accounts", '001', '2000-09-12');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> mysql> insert into Department values("001", "Accounts", '001', '2000-09-12');
+mysql> insert into Department values("002", "R&D", '006', '1999-10-01');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into Department values("005", "IT", '004', '200-10-01');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from Department
+    -> ;
++-----+----------+------+---------------+
+| DNo | DName    | mgrs | mgrsstartdate |
++-----+----------+------+---------------+
+| 001 | Accounts | 001  | 2000-09-12    |
+| 002 | R&D      | 006  | 1999-10-01    |
+| 005 | IT       | 004  | 0200-10-01    |
++-----+----------+------+---------------+
+3 rows in set (0.00 sec)
+
+mysql> update Employee set DNo=001 where superssn=001;
+ERROR 1452 (23000): Cannot add or update a child row: a foreign key constraint fails (`4AL19CS039_Company`.`Employee`, CONSTRAINT `Employee_ibfk_2` FOREIGN KEY (`DNo`) REFERENCES `Department` (`DNo`))
+mysql> update Employee set DNo='001' where superssn='001';
+Query OK, 5 rows affected (0.10 sec)
+Rows matched: 5  Changed: 5  Warnings: 0
+
+mysql> select * from Employee;
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| ssn | fname    | lname     | address      | sex    | salary | superssn | DNo  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| 001 | Andrea   | Marshall  | California   | Female | 300000 | NULL     | NULL |
+| 002 | Damon    | Salvetore | Virgenia     | Male   | 600000 | 001      | 001  |
+| 003 | Elena    | Gilbert   | Mystic Falls | Female | 600000 | 001      | 001  |
+| 004 | Caroline | Forbes    | Mystic Falls | Female | 700000 | 001      | 001  |
+| 005 | Marcel   | Gerard    | Ohio         | Male   | 500000 | 001      | 001  |
+| 006 | Elijah   | Mikelson  | Mystic Falls | Male   | 800000 | 001      | 001  |
+| 007 | Kol      | Mikelson  | Mystic Falls | Male   | 600000 | 006      | NULL |
+| 008 | Cami     | Scott     | New Orleans  | Female | 700000 | 004      | NULL |
+| 009 | Shawn    | Scott     | New Orleans  | Male   | 650000 | 004      | NULL |
+| 010 | Klause   | Mikelson  | Mystic Falls | Male   | 100000 | 006      | NULL |
+| 011 | Rebekah  | Mikelson  | Mystic Falls | Female | 800000 | 006      | NULL |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+11 rows in set (0.00 sec)
+
+mysql> update Employee set DNo='002' where superssn='006.';
+Query OK, 0 rows affected (0.00 sec)
+Rows matched: 0  Changed: 0  Warnings: 0
+
+mysql> update Employee set DNo='002' where superssn='006';
+Query OK, 3 rows affected (0.12 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> update Employee set DNo='005' where superssn='004';
+Query OK, 2 rows affected (0.03 sec)
+Rows matched: 2  Changed: 2  Warnings: 0
+
+mysql> select * from Employee;
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| ssn | fname    | lname     | address      | sex    | salary | superssn | DNo  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| 001 | Andrea   | Marshall  | California   | Female | 300000 | NULL     | NULL |
+| 002 | Damon    | Salvetore | Virgenia     | Male   | 600000 | 001      | 001  |
+| 003 | Elena    | Gilbert   | Mystic Falls | Female | 600000 | 001      | 001  |
+| 004 | Caroline | Forbes    | Mystic Falls | Female | 700000 | 001      | 001  |
+| 005 | Marcel   | Gerard    | Ohio         | Male   | 500000 | 001      | 001  |
+| 006 | Elijah   | Mikelson  | Mystic Falls | Male   | 800000 | 001      | 001  |
+| 007 | Kol      | Mikelson  | Mystic Falls | Male   | 600000 | 006      | 002  |
+| 008 | Cami     | Scott     | New Orleans  | Female | 700000 | 004      | 005  |
+| 009 | Shawn    | Scott     | New Orleans  | Male   | 650000 | 004      | 005  |
+| 010 | Klause   | Mikelson  | Mystic Falls | Male   | 100000 | 006      | 002  |
+| 011 | Rebekah  | Mikelson  | Mystic Falls | Female | 800000 | 006      | 002  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+11 rows in set (0.00 sec)
+
+mysql> insert into Department values("003", "HR", '003', '200-10-01');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Department values("004", "PR", '011', '2012-10-01');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from Department;
++-----+----------+------+---------------+
+| DNo | DName    | mgrs | mgrsstartdate |
++-----+----------+------+---------------+
+| 001 | Accounts | 001  | 2000-09-12    |
+| 002 | R&D      | 006  | 1999-10-01    |
+| 003 | HR       | 003  | 0200-10-01    |
+| 004 | PR       | 011  | 2012-10-01    |
+| 005 | IT       | 004  | 0200-10-01    |
++-----+----------+------+---------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into DLocation('001', "Main Block");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ''001', "Main Block")' at line 1
+mysql> insert into DLocation(001, "Block A");
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near '001, "Block A")' at line 1
+mysql> insert into DLocation values('001', "Block A");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into DLocation values('002', "Block B");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into DLocation values('003', "Block C");
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into DLocation values('004', "Block D");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into DLocation values('005', "Block E");
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from DLocation;
++-----+---------+
+| DNo | DLoc    |
++-----+---------+
+| 001 | Block A |
+| 002 | Block B |
+| 003 | Block C |
+| 004 | Block D |
+| 005 | Block E |
++-----+---------+
+5 rows in set (0.00 sec)
+
+mysql> insert into Project values('001', "Io
+    "> ;
+    "> 
+[1]+  Stopped                 mysql -u root -p
+CSE_A2@dbms37-198:/home$ mysql -u root -p
+Enter password: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Your MySQL connection id is 7
+Server version: 5.7.20 MySQL Community Server (GPL)
+
+Copyright (c) 2000, 2017, Oracle and/or its affiliates. All rights reserved.
+
+Oracle is a registered trademark of Oracle Corporation and/or its
+affiliates. Other names may be trademarks of their respective
+owners.
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> show databases;
++----------------------------+
+| Database                   |
++----------------------------+
+| information_schema         |
+| 4AL18CS064                 |
+| 4AL19CS009_companydb       |
+| 4AL19CS039_Company         |
+| 4al19cs070_companydatabase |
+| A                          |
+| Accident                   |
+| STUDENT                    |
+| cat                        |
+| chibag                     |
+| eat                        |
+| mat                        |
+| megha                      |
+| mysql                      |
+| performance_schema         |
+| rat                        |
+| root                       |
+| student                    |
+| students                   |
+| sys                        |
++----------------------------+
+20 rows in set (0.00 sec)
+
+mysql> use 4AL19CS039_Company;
+Reading table information for completion of table and column names
+You can turn off this feature to get a quicker startup with -A
+
+Database changed
+mysql> ls
+    -> ;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'ls' at line 1
+mysql> insert into Project values('001', "ADAS", "Block B", '002');
+Query OK, 1 row affected (0.02 sec)
+
+mysql> insert into Project values('002', "Computer Vision", "Block B", '002');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Project values('003', "IoT", "Block B", '005');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into Project values('004', "Social Media Campain", "Block D", '004');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into Project values('005', "Recruitment 2022", "Block C", '003');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> select * from Project;
++-----+----------------------+-----------+------+
+| PNo | PName                | PLocation | DNo  |
++-----+----------------------+-----------+------+
+| 001 | ADAS                 | Block B   | 002  |
+| 002 | Computer Vision      | Block B   | 002  |
+| 003 | IoT                  | Block B   | 005  |
+| 004 | Social Media Campain | Block D   | 004  |
+| 005 | Recruitment 2022     | Block C   | 003  |
++-----+----------------------+-----------+------+
+5 rows in set (0.00 sec)
+
+mysql> insert into WorksOn values('003', '005', '60');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into WorksOn values('011', '004', '50');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into WorksOn values('004', '003', '80');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into WorksOn values('008', '002', '100');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> insert into WorksOn values('009', '001', '200');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from WorksOn;
++-----+-----+-------+
+| ssn | PNo | hours |
++-----+-----+-------+
+| 003 | 005 | 60    |
+| 004 | 003 | 80    |
+| 008 | 002 | 100   |
+| 009 | 001 | 200   |
+| 011 | 004 | 50    |
++-----+-----+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into Employee values("012", "Lizzi", "Saltzman", "New Orleans", "Female", '500000', NULL, '004');
+Query OK, 1 row affected (0.04 sec)
+
+mysql> insert into Employee values("013", "Josi", "Saltzman", "Mystic Falls", "Female", '500000', NULL, '003');
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from Employee;
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| ssn | fname    | lname     | address      | sex    | salary | superssn | DNo  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| 001 | Andrea   | Marshall  | California   | Female | 300000 | NULL     | NULL |
+| 002 | Damon    | Salvetore | Virgenia     | Male   | 600000 | 001      | 001  |
+| 003 | Elena    | Gilbert   | Mystic Falls | Female | 600000 | 001      | 001  |
+| 004 | Caroline | Forbes    | Mystic Falls | Female | 700000 | 001      | 001  |
+| 005 | Marcel   | Gerard    | Ohio         | Male   | 500000 | 001      | 001  |
+| 006 | Elijah   | Mikelson  | Mystic Falls | Male   | 800000 | 001      | 001  |
+| 007 | Kol      | Mikelson  | Mystic Falls | Male   | 600000 | 006      | 002  |
+| 008 | Cami     | Scott     | New Orleans  | Female | 700000 | 004      | 005  |
+| 009 | Shawn    | Scott     | New Orleans  | Male   | 650000 | 004      | 005  |
+| 010 | Klause   | Mikelson  | Mystic Falls | Male   | 100000 | 006      | 002  |
+| 011 | Rebekah  | Mikelson  | Mystic Falls | Female | 800000 | 006      | 002  |
+| 012 | Lizzi    | Saltzman  | New Orleans  | Female | 500000 | NULL     | 004  |
+| 013 | Josi     | Saltzman  | Mystic Falls | Female | 500000 | NULL     | 003  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+13 rows in set (0.00 sec)
+
+mysql> insert into Employee values("014", "MG", "Saltzman", "Mystic Falls", "Male", '500000', NULL, NULL);
+Query OK, 1 row affected (0.03 sec)
+
+mysql> select * from Employee;
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| ssn | fname    | lname     | address      | sex    | salary | superssn | DNo  |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+| 001 | Andrea   | Marshall  | California   | Female | 300000 | NULL     | NULL |
+| 002 | Damon    | Salvetore | Virgenia     | Male   | 600000 | 001      | 001  |
+| 003 | Elena    | Gilbert   | Mystic Falls | Female | 600000 | 001      | 001  |
+| 004 | Caroline | Forbes    | Mystic Falls | Female | 700000 | 001      | 001  |
+| 005 | Marcel   | Gerard    | Ohio         | Male   | 500000 | 001      | 001  |
+| 006 | Elijah   | Mikelson  | Mystic Falls | Male   | 800000 | 001      | 001  |
+| 007 | Kol      | Mikelson  | Mystic Falls | Male   | 600000 | 006      | 002  |
+| 008 | Cami     | Scott     | New Orleans  | Female | 700000 | 004      | 005  |
+| 009 | Shawn    | Scott     | New Orleans  | Male   | 650000 | 004      | 005  |
+| 010 | Klause   | Mikelson  | Mystic Falls | Male   | 100000 | 006      | 002  |
+| 011 | Rebekah  | Mikelson  | Mystic Falls | Female | 800000 | 006      | 002  |
+| 012 | Lizzi    | Saltzman  | New Orleans  | Female | 500000 | NULL     | 004  |
+| 013 | Josi     | Saltzman  | Mystic Falls | Female | 500000 | NULL     | 003  |
+| 014 | MG       | Saltzman  | Mystic Falls | Male   | 500000 | NULL     | NULL |
++-----+----------+-----------+--------------+--------+--------+----------+------+
+14 rows in set (0.00 sec)
+
+mysql> ^C
+mysql> 
+

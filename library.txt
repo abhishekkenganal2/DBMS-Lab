@@ -1,0 +1,239 @@
+
+mysql> desc Publisher;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| Name    | varchar(20) | NO   | PRI | NULL    |       |
+| Address | varchar(20) | YES  |     | NULL    |       |
+| Phone   | varchar(20) | YES  |     | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+3 rows in set (0.02 sec)
+
+mysql> create table Book(Book_id varchar(10) primary key,Title varchar(20),Pub_name varchar(20),Pub_Yr date,foreign key(Pub_name) references Publisher(Name));
+Query OK, 0 rows affected (0.85 sec)
+
+mysql>  create table Book_Authors(Book_Id varchar(20),Author_Name char(20),primary key(Book_Id,Author_Name), foreign key(Book_Id)references Book(Book_Id)ON DELETE CASCADE);
+Query OK, 0 rows affected (0.62 sec)
+
+mysql>  create table Library_Branch(Branch_Id varchar(20)primary key,Branch_Name char(20 ),Address char(20));
+Query OK, 0 rows affected (0.70 sec)
+
+mysql> create table Book_Copies(Book_Id varchar(20),Branch_Id varchar(20),No_of_copies int, primary key(Book_Id,Branch_Id), foreign key(Branch_Id)references Library_Branch(Branch_Id),foreign key(Book_Id)references Book(Book_Id)on delete cascade);
+Query OK, 0 rows affected (1.47 sec)
+
+mysql> create table Book_Lending(Book_Id varchar(20),Branch_Id varchar(20),Card_no varchar(20),Date_out date, Due_date date,primary key(Book_Id,Branch_Id,Card_no), foreign key(Branch_Id)references Library_Branch(Branch_Id),foreign key(Book_Id)references Book(Book_Id)on delete cascade);
+Query OK, 0 rows affected (0.97 sec)
+
+mysql> INSERT INTO Publishers VALUES("Abhi","Mijar","9998888777");
+ERROR 1146 (42S02): Table 'Library.Publishers' doesn't exist
+mysql> INSERT INTO Publisher VALUES("Abhi","Mijar","9998888777");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> INSERT INTO Publisher VALUES("Ajay","Mijar","9998888666");
+Query OK, 1 row affected (0.19 sec)
+
+mysql> INSERT INTO Publisher VALUES("Akhilesh","Mijar","9997777666");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> INSERT INTO Publisher VALUES("Gagan","Tumkur","8887777666");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> ALTER TABLE Book MODIFY Pub_Yr VARCHAR(20);
+Query OK, 0 rows affected (2.39 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> INSERT INTO Book VALUES("B1","2STATES","Abhi",2015-06-11);
+Query OK, 1 row affected (0.09 sec)
+
+mysql> INSERT INTO Book VALUES("B2","Joji","Ajay",2014-17-21);
+Query OK, 1 row affected (0.14 sec)
+
+mysql> INSERT INTO Book VALUES("B3","Malik","Akhilesh",2019-08-24);
+Query OK, 1 row affected (0.11 sec)
+
+mysql> INSERT INTO Book VALUES("B4","Rock","Gagan",2019-06-14);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> INSERT INTO Book_Authors VALUES("B1","Santhosh");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> INSERT INTO Book_Authors VALUES("B2","Abay");
+Query OK, 1 row affected (0.18 sec)
+
+mysql> INSERT INTO Book_Authors VALUES("B3","Anand");
+Query OK, 1 row affected (0.12 sec)
+
+mysql>  INSERT INTO Library_Branch VALUES("1","Gandhi","Banglore");
+Query OK, 1 row affected (0.11 sec)
+
+mysql>  INSERT INTO Library_Branch VALUES("2","Nehru","Mumbai");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> desc Book_Copies;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Book_Id      | varchar(20) | NO   | PRI | NULL    |       |
+| Branch_Id    | varchar(20) | NO   | PRI | NULL    |       |
+| No_of_copies | int         | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> insert into Book_Copies values("B1","1",10);
+Query OK, 1 row affected (0.14 sec)
+
+mysql> insert into Book_Copies values("B2","2",5);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> insert into Book_Copies values("B3","1",5);
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into Book_Copies values("B4","2",10);
+Query OK, 1 row affected (0.15 sec)
+
+
+mysql> create table Book_Lending(Book_Id varchar(20),Branch_Id varchar(20),Card_no varchar(20),Date_out date, Due_date date,primary key(Book_Id,Branch_Id,Card_no), foreign key(Branch_Id)references Library_Branch(Branch_Id),foreign key(Book_Id)references Book(Book_Id)on delete cascade);
+Query OK, 0 rows affected (1.58 sec)
+
+mysql> insert into Book_Lending values("B1","1","1","2017-01-01","2017-03-20");
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into Book_Lending values("B1","2","1","2017-02-01","2017-04-20");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> insert into Book_Lending values("B2","1","1","2017-02-10","2017-04-30");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into Book_Lending values("B2","2","1","2017-02-10","2017-04-30");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> desc Book_Lending;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Book_Id   | varchar(20) | NO   | PRI | NULL    |       |
+| Branch_Id | varchar(20) | NO   | PRI | NULL    |       |
+| Card_no   | varchar(20) | NO   | PRI | NULL    |       |
+| Date_out  | date        | YES  |     | NULL    |       |
+| Due_date  | date        | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> desc Book;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| Book_id  | varchar(10) | NO   | PRI | NULL    |       |
+| Title    | varchar(20) | YES  |     | NULL    |       |
+| Pub_name | varchar(20) | YES  | MUL | NULL    |       |
+| Pub_Yr   | varchar(20) | YES  |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+mysql> desc Book_Authors;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Book_Id     | varchar(20) | NO   | PRI | NULL    |       |
+| Author_Name | char(20)    | NO   | PRI | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> desc Book_Copies;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Book_Id      | varchar(20) | NO   | PRI | NULL    |       |
+| Branch_Id    | varchar(20) | NO   | PRI | NULL    |       |
+| No_of_copies | int         | YES  |     | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> desc Library_Branch;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Branch_Id   | varchar(20) | NO   | PRI | NULL    |       |
+| Branch_Name | char(20)    | YES  |     | NULL    |       |
+| Address     | char(20)    | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+
+mysql> select l.Branch_Id,b.Book_Id,b.Title,a.Author_Name,b.Pub_Name,bc.No_of_copies from Book b,Book_Authors a,Book_Copies bc,Library_Branch l where
+b.Book_Id = a.Book_Id and b.Book_Id = bc.Book_Id and bc.Branch_Id = l.Branch_Id;
++-----------+---------+---------+-------------+----------+--------------+
+| Branch_Id | Book_Id | Title   | Author_Name | Pub_Name | No_of_copies |
++-----------+---------+---------+-------------+----------+--------------+
+| 1         | B1      | 2STATES | Santhosh    | Abhi     |           10 |
+| 1         | B3      | Malik   | Anand       | Akhilesh |            5 |
+| 2         | B2      | Joji    | Abay        | Ajay     |            5 |
++-----------+---------+---------+-------------+----------+--------------+
+3 rows in set (0.00 sec)
+
+
+
+mysql> select Card_no from Book_Lending where Date_out between "2017-01-10" and "2017-06-30" group by Card_no having COUNT(*)>3;
+Empty set (0.03 sec)
+
+
+mysql> delete from Book where Book_Id = 'B2';
+Query OK, 1 row affected (0.14 sec)
+
+mysql> select *from Book;
++---------+---------+----------+--------+
+| Book_id | Title   | Pub_name | Pub_Yr |
++---------+---------+----------+--------+
+| B1      | 2STATES | Abhi     | 1998   |
+| B3      | Malik   | Akhilesh | 1987   |
+| B4      | Rock    | Gagan    | 1999   |
++---------+---------+----------+--------+
+3 rows in set (0.01 sec)
+
+mysql> select *from Book_Copies;
++---------+-----------+--------------+
+| Book_Id | Branch_Id | No_of_copies |
++---------+-----------+--------------+
+| B1      | 1         |           10 |
+| B3      | 1         |            5 |
+| B4      | 2         |           10 |
++---------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+mysql> select *from Book_Authors;
++---------+-------------+
+| Book_Id | Author_Name |
++---------+-------------+
+| B1      | Santhosh    |
+| B3      | Anand       |
++---------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> create view Publication as select Pub_Yr from Book;
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> select *from Publication;
++--------+
+| Pub_Yr |
++--------+
+| 1998   |
+| 1987   |
+| 1999   |
++--------+
+3 rows in set (0.01 sec)
+
+
+mysql> create view Books as select b.Book_Id,b.Title,l.Branch_Id,bc.No_of_copies from Book b,Book_Copies bc,Library_Branch l where b.Book_Id = bc.Book_Id and l.Branch_Id = bc.Branch_Id;
+Query OK, 0 rows affected (0.14 sec)
+
+mysql> select *from Books;
++---------+---------+-----------+--------------+
+| Book_Id | Title   | Branch_Id | No_of_copies |
++---------+---------+-----------+--------------+
+| B1      | 2STATES | 1         |           10 |
+| B3      | Malik   | 1         |            5 |
+| B4      | Rock    | 2         |           10 |
++---------+---------+-----------+--------------+
+3 rows in set (0.00 sec)
+
+

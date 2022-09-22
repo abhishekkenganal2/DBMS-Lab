@@ -1,0 +1,362 @@
+mysql> create database movie;
+Query OK, 1 row affected (0.16 sec)
+
+mysql> use movie;
+Database changed
+
+mysql> create table ACTOR(Act_Id varchar(10),Act_Name varchar(10),Act_Gender varchar(10));
+Query OK, 0 rows affected (1.31 sec)
+
+mysql> create table DIRECTOR(Dir_Id varchar(10),Dir_Name varchar(10),Dir_phone varchar(10));
+Query OK, 0 rows affected (1.47 sec)
+
+mysql> alter table ACTOR add primary key(Act_Id);
+Query OK, 0 rows affected (1.95 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table DIRECTOR add primary key(Dir_Id);
+Query OK, 0 rows affected (1.48 sec)
+
+mysql> desc ACTOR;
++------------+-------------+------+-----+---------+-------+
+| Field      | Type        | Null | Key | Default | Extra |
++------------+-------------+------+-----+---------+-------+
+| Act_Id     | varchar(10) | NO   | PRI | NULL    |       |
+| Act_Name   | varchar(10) | YES  |     | NULL    |       |
+| Act_Gender | varchar(10) | YES  |     | NULL    |       |
++------------+-------------+------+-----+---------+-------+
+3 rows in set (0.03 sec)
+
+mysql> desc DIRECTOR;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Dir_Id    | varchar(10) | NO   | PRI | NULL    |       |
+| Dir_Name  | varchar(10) | YES  |     | NULL    |       |
+| Dir_phone | varchar(10) | YES  |     | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table MOVIE(Mov_Id varchar(10),Mov_Title varchar(10),Mov_yr int,Mov_Lang varchar(10),Dir_Id varchar(10),foreign key(Dir_Id) references DIRECTOR(Dir_Id));
+Query OK, 0 rows affected (0.72 sec)
+
+mysql> alter table MOVIE add primary key(Mov_Id);
+Query OK, 0 rows affected (1.83 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> desc MOVIE;
++-----------+-------------+------+-----+---------+-------+
+| Field     | Type        | Null | Key | Default | Extra |
++-----------+-------------+------+-----+---------+-------+
+| Mov_Id    | varchar(10) | NO   | PRI | NULL    |       |
+| Mov_Title | varchar(10) | YES  |     | NULL    |       |
+| Mov_yr    | int         | YES  |     | NULL    |       |
+| Mov_Lang  | varchar(10) | YES  |     | NULL    |       |
+| Dir_Id    | varchar(10) | YES  | MUL | NULL    |       |
++-----------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> create table MOVIE_CAST(Act_Id varchar(10),Mov_Id varchar(10),Role varchar(10),primary key(Act_Id,Mov_Id),foreign key(Act_Id) references ACTOR(Act_Id) on delete cascade,foreign key(Mov_Id) references MOVIE(Mov_Id)on delete cascade);
+Query OK, 0 rows affected (1.15 sec)
+
+mysql> desc MOVIE_CAST;
++--------+-------------+------+-----+---------+-------+
+| Field  | Type        | Null | Key | Default | Extra |
++--------+-------------+------+-----+---------+-------+
+| Act_Id | varchar(10) | NO   | PRI | NULL    |       |
+| Mov_Id | varchar(10) | NO   | PRI | NULL    |       |
+| Role   | varchar(10) | YES  |     | NULL    |       |
++--------+-------------+------+-----+---------+-------+
+3 rows in set (0.00 sec)
+
+mysql> create table RATING(Mov_Id varchar(10),RevStar int,primary key(Mov_Id,Revstar),foreign key(Mov_Id) references MOVIE(Mov_Id));
+Query OK, 0 rows affected (1.20 sec)
+
+mysql> desc RATING;
++---------+-------------+------+-----+---------+-------+
+| Field   | Type        | Null | Key | Default | Extra |
++---------+-------------+------+-----+---------+-------+
+| Mov_Id  | varchar(10) | NO   | PRI | NULL    |       |
+| RevStar | int         | NO   | PRI | NULL    |       |
++---------+-------------+------+-----+---------+-------+
+2 rows in set (0.00 sec)
+
+mysql> insert into ACTOR values("001","Aman","M");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into ACTOR values("002","Abhi","M");
+Query OK, 1 row affected (0.13 sec)
+
+mysql> insert into ACTOR values("003","Chriss","M");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into ACTOR values("004","Jack","F");
+Query OK, 1 row affected (0.61 sec)
+
+mysql> insert into ACTOR values("005","Pooja","F");
+Query OK, 1 row affected (0.41 sec)
+
+mysql> select *from ACTOR;
++--------+----------+------------+
+| Act_Id | Act_Name | Act_Gender |
++--------+----------+------------+
+| 001    | Aman     | M          |
+| 002    | Abhi     | M          |
+| 003    | Chriss   | M          |
+| 004    | Jack     | F          |
+| 005    | Pooja    | F          |
++--------+----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into DIRECTOR values("1","Abhi","9994445555");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into DIRECTOR values("2","Hitchcock","9994446666");
+Query OK, 1 row affected (0.35 sec)
+
+mysql> insert into DIRECTOR values("3","John","8884446666");
+Query OK, 1 row affected (0.13 sec)
+
+mysql> ALTER TABLE DIRECTOR MODIFY Dir_Name VARCHAR(20);
+Query OK, 0 rows affected (0.20 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> insert into DIRECTOR values("4","Steven Spielberg","8887776666");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> insert into DIRECTOR values("5","Steve","9997776666");
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select *from DIRECTOR;
++--------+------------------+------------+
+| Dir_Id | Dir_Name         | Dir_phone  |
++--------+------------------+------------+
+| 1      | Abhi             | 9994445555 |
+| 2      | Hitchcock        | 9994446666 |
+| 3      | John             | 8884446666 |
+| 4      | Steven Spielberg | 8887776666 |
+| 5      | Steve            | 9997776666 |
++--------+------------------+------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into MOVIE values("01","Hello","1996","En","2");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into MOVIE values("02","Welcome","1999","En","2");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into MOVIE values("03","Woow","2017","En","4");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into MOVIE values("04","Legend","2016","En","1");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into MOVIE values("05","Level","2019","En","4");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> select *from MOVIE;
++--------+-----------+--------+----------+--------+
+| Mov_Id | Mov_Title | Mov_yr | Mov_Lang | Dir_Id |
++--------+-----------+--------+----------+--------+
+| 01     | Hello     |   1996 | En       | 2      |
+| 02     | Welcome   |   1999 | En       | 2      |
+| 03     | Woow      |   2017 | En       | 4      |
+| 04     | Legend    |   2016 | En       | 1      |
+| 05     | Level     |   2019 | En       | 4      |
++--------+-----------+--------+----------+--------+
+5 rows in set (0.00 sec)
+
+mysql> insert into MOVIE_CAST values("001","01","Main");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into MOVIE_CAST values("001","02","Main");
+Query OK, 1 row affected (0.14 sec)
+
+mysql> insert into MOVIE_CAST values("005","02","Heroin");
+Query OK, 1 row affected (0.15 sec)
+
+mysql> insert into MOVIE_CAST values("005","04","Heroin");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into MOVIE_CAST values("003","02","Her0");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into MOVIE_CAST values("003","03","Hero");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into MOVIE_CAST values("002","02","Hero");
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into MOVIE_CAST values("002","01","Hero");
+Query OK, 1 row affected (0.18 sec)
+
+mysql> select *from MOVIE_CAST;
++--------+--------+--------+
+| Act_Id | Mov_Id | Role   |
++--------+--------+--------+
+| 001    | 01     | Main   |
+| 001    | 02     | Main   |
+| 002    | 01     | Hero   |
+| 002    | 02     | Hero   |
+| 003    | 02     | Her0   |
+| 003    | 03     | Hero   |
+| 005    | 02     | Heroin |
+| 005    | 04     | Heroin |
++--------+--------+--------+
+8 rows in set (0.00 sec)
+
+mysql> insert into RATING values("01",5);
+Query OK, 1 row affected (0.19 sec)
+
+mysql> insert into RATING values("02",3);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into RATING values("03",1);
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into RATING values("04",4);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into RATING values("05",5);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> select *from RATING;
++--------+---------+
+| Mov_Id | RevStar |
++--------+---------+
+| 01     |       5 |
+| 02     |       3 |
+| 03     |       1 |
+| 04     |       4 |
+| 05     |       5 |
++--------+---------+
+5 rows in set (0.00 sec)
+
+Query 1:-
+mysql> select MOV_Title from MOVIE where Dir_Id in(select Dir_Id from DIRECTOR where Dir_Name="Hitchcock");
++-----------+
+| MOV_Title |
++-----------+
+| Hello     |
+| Welcome   |
++-----------+
+2 rows in set (0.02 sec)
+
+Query 2:-
+mysql> select Mov_Title from MOVIE m,MOVIE_CAST mc where m.Mov_Id = mc.Mov_Id and Act_Id in(select Act_Id from MOVIE_CAST mc2 group by Act_Id having count(Act_Id)>1) group by Mov_Title;
++-----------+
+| Mov_Title |
++-----------+
+| Hello     |
+| Welcome   |
+| Woow      |
+| Legend    |
++-----------+
+4 rows in set (0.00 sec)
+
+Query 3:-
+mysql> select A.Act_Name,Mov_Title,Mov_yr from ACTOR A join MOVIE_CAST mc on A.Act_Id = mc.Act_Id join MOVIE m on mc.Mov_Id = m.Mov_Id where m.Mov_yr not between 2000 and 2015;
++----------+-----------+--------+
+| Act_Name | Mov_Title | Mov_yr |
++----------+-----------+--------+
+| Aman     | Hello     |   1996 |
+| Abhi     | Hello     |   1996 |
+| Aman     | Welcome   |   1999 |
+| Abhi     | Welcome   |   1999 |
+| Chriss   | Welcome   |   1999 |
+| Pooja    | Welcome   |   1999 |
+| Chriss   | Woow      |   2017 |
+| Pooja    | Legend    |   2016 |
++----------+-----------+--------+
+8 rows in set (0.00 sec)
+
+mysql> select A.Act_Name,Mov_Title,Mov_yr from ACTOR A join MOVIE_CAST mc on A.Act_Id = mc.Act_Id join MOVIE m on mc.Mov_Id = m.Mov_Id where m.Mov_yr between 2000 and 2015;
+Empty set (0.00 sec)
+
+mysql> insert into MOVIE_CAST values("002","06","Hero");
+Query OK, 1 row affected (0.13 sec)
+
+mysql> select A.Act_Name,Mov_Title,Mov_yr from ACTOR A join MOVIE_CAST mc on A.Act_Id = mc.Act_Id join MOVIE m on mc.Mov_Id = m.Mov_Id where m.Mov_yr
+between 2000 and 2015;
++----------+-----------+--------+
+| Act_Name | Mov_Title | Mov_yr |
++----------+-----------+--------+
+| Abhi     | Spark     |   2002 |
++----------+-----------+--------+
+1 row in set (0.00 sec)
+
+mysql> insert into RATING values("06",5);
+Query OK, 1 row affected (0.11 sec)
+
+mysql> select *from RATING;
++--------+---------+
+| Mov_Id | RevStar |
++--------+---------+
+| 01     |       5 |
+| 02     |       3 |
+| 03     |       1 |
+| 04     |       4 |
+| 05     |       5 |
+| 06     |       5 |
++--------+---------+
+6 rows in set (0.00 sec)
+
+Query 4:-
+mysql> select Mov_Title,MAX(RevStar) as bestrating from MOVIE m,RATING r where m.Mov_Id = r.Mov_Id and r.RevStar is not NULL group by Mov_Title;
++-----------+------------+
+| Mov_Title | bestrating |
++-----------+------------+
+| Hello     |          5 |
+| Welcome   |          3 |
+| Woow      |          1 |
+| Legend    |          4 |
+| Level     |          5 |
+| Spark     |          5 |
++-----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select Mov_Title,MAX(RevStar) as bestrating from MOVIE m,RATING r where m.Mov_Id = r.Mov_Id and r.RevStar is not NULL group by Mov_Title Order by Mov_Title;
++-----------+------------+
+| Mov_Title | bestrating |
++-----------+------------+
+| Hello     |          5 |
+| Legend    |          4 |
+| Level     |          5 |
+| Spark     |          5 |
+| Welcome   |          3 |
+| Woow      |          1 |
++-----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> select Mov_Title,MAX(RevStar) as bestrating from MOVIE m,RATING r where m.Mov_Id = r.Mov_Id and r.RevStar is not NULL group by Mov_Title Order
+by bestrating;
++-----------+------------+
+| Mov_Title | bestrating |
++-----------+------------+
+| Woow      |          1 |
+| Welcome   |          3 |
+| Legend    |          4 |
+| Hello     |          5 |
+| Level     |          5 |
+| Spark     |          5 |
++-----------+------------+
+6 rows in set (0.01 sec)
+
+Query 5:-
+mysql> update RATING set RevStar =5 where Mov_Id in (select Mov_Id from MOVIE where Dir_Id in (Select Dir_Id  from DIRECTOR where Dir_Name= "Steven Spielberg"));
+Query OK, 1 row affected (0.12 sec)
+Rows matched: 2  Changed: 1  Warnings: 0
+
+mysql> select *from RATING;
++--------+---------+
+| Mov_Id | RevStar |
++--------+---------+
+| 01     |       5 |
+| 02     |       3 |
+| 03     |       5 |
+| 04     |       4 |
+| 05     |       5 |
+| 06     |       5 |
++--------+---------+
+6 rows in set (0.00 sec)
+

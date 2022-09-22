@@ -1,0 +1,224 @@
+use Order_database;
+
+mysql> create table Salesman(Salesman_id varchar(10) primary key,Name varchar(10
+),city varchar(10),Commission varchar(10));
+Query OK, 0 rows affected (0.74 sec)
+
+mysql> desc Salesman;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Salesman_id | varchar(10) | NO   | PRI | NULL    |       |
+| Name        | varchar(10) | YES  |     | NULL    |       |
+| city        | varchar(10) | YES  |     | NULL    |       |
+| Commission  | varchar(10) | YES  |     | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+4 rows in set (0.02 sec)
+
+mysql> create table CUST(Cust_id varchar(10) primary key,Cust_name varchar(10),city varchar(10),Grade int,Salesman_id varchar(10),foreign key(Salesman_id) references Salesman(Salesman_id) on delete set null);
+Query OK, 0 rows affected (2.11 sec)
+
+mysql> desc CUST;
++-------------+-------------+------+-----+---------+-------+
+| Field       | Type        | Null | Key | Default | Extra |
++-------------+-------------+------+-----+---------+-------+
+| Cust_id     | varchar(10) | NO   | PRI | NULL    |       |
+| Cust_name   | varchar(10) | YES  |     | NULL    |       |
+| city        | varchar(10) | YES  |     | NULL    |       |
+| Grade       | int         | YES  |     | NULL    |       |
+| Salesman_id | varchar(10) | YES  | MUL | NULL    |       |
++-------------+-------------+------+-----+---------+-------+
+5 rows in set (0.01 sec)
+
+mysql> create table ORDERS(Ord_no varchar(10) primary key,Purchase_Amt varchar(10),Ord_Date date,Cust_id varchar(10),Salesman_id varchar(10),foreign key(Cust_id) references CUST(Cust_id),foreign key(Salesman_id) references Salesman(Salesman_id) on delete cascade);
+Query OK, 0 rows affected (2.48 sec)
+
+mysql> DESC ORDERS;
++--------------+-------------+------+-----+---------+-------+
+| Field        | Type        | Null | Key | Default | Extra |
++--------------+-------------+------+-----+---------+-------+
+| Ord_no       | varchar(10) | NO   | PRI | NULL    |       |
+| Purchase_Amt | varchar(10) | YES  |     | NULL    |       |
+| Ord_Date     | date        | YES  |     | NULL    |       |
+| Cust_id      | varchar(10) | YES  | MUL | NULL    |       |
+| Salesman_id  | varchar(10) | YES  | MUL | NULL    |       |
++--------------+-------------+------+-----+---------+-------+
+5 rows in set (0.00 sec)
+
+mysql> insert into Salesman values("1000","Abhi","Bengalure","5%");
+Query OK, 1 row affected (0.09 sec)
+
+mysql> insert into Salesman values("1001","Akhi","Bengalure","3%");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into Salesman values("1002","Ajay","Bengalure","6%");
+Query OK, 1 row affected (0.18 sec)
+
+mysql> insert into Salesman values("1003","Chinnu","Mysore","3%");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into Salesman values("1004","Adam","Belgaum","4%");
+Query OK, 1 row affected (0.07 sec)
+
+mysql> insert into Salesman values("1005","Fayaz","Bijapur","10%");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> select *from Salesman;
++-------------+--------+-----------+------------+
+| Salesman_id | Name   | city      | Commission |
++-------------+--------+-----------+------------+
+| 1000        | Abhi   | Bengalure | 5%         |
+| 1001        | Akhi   | Bengalure | 3%         |
+| 1002        | Ajay   | Bengalure | 6%         |
+| 1003        | Chinnu | Mysore    | 3%         |
+| 1004        | Adam   | Belgaum   | 4%         |
+| 1005        | Fayaz  | Bijapur   | 10%        |
++-------------+--------+-----------+------------+
+6 rows in set (0.00 sec)
+
+mysql> insert into CUST values("1","AAA","Bijapur","18","1003");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> insert into CUST values("2","BBB","Bengalure",10,"1000");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into CUST values("3","CCC","Bengalure",10,"1000");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into CUST values("4","DDD","Belgeum",13,"1002");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into CUST values("5","EEE","Manglore",08,"1004");
+Query OK, 1 row affected (0.10 sec)
+
+mysql> select *from CUST;
++---------+-----------+-----------+-------+-------------+
+| Cust_id | Cust_name | city      | Grade | Salesman_id |
++---------+-----------+-----------+-------+-------------+
+| 1       | AAA       | Bijapur   |    18 | 1003        |
+| 2       | BBB       | Bengalure |    10 | 1000        |
+| 3       | CCC       | Bengalure |    10 | 1000        |
+| 4       | DDD       | Belgeum   |    13 | 1002        |
+| 5       | EEE       | Manglore  |     8 | 1004        |
++---------+-----------+-----------+-------+-------------+
+5 rows in set (0.00 sec)
+
+mysql> insert into ORDERS values("1","2000","2021-12-02","2","1000");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into ORDERS values("2","4000","2021-11-02","3","1000");
+Query OK, 1 row affected (0.11 sec)
+
+mysql> insert into ORDERS values("3","1000","2021-10-02","1","1004");
+Query OK, 1 row affected (0.08 sec)
+
+mysql> insert into ORDERS values("4","1300","2021-09-02","4","1003");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into ORDERS values("5","4500","2021-11-09","2","1000");
+Query OK, 1 row affected (0.47 sec)
+
+mysql> insert into ORDERS values("6","9000","2021-12-02","2","1000");
+Query OK, 1 row affected (0.12 sec)
+
+mysql> select *from ORDERS;
++--------+--------------+------------+---------+-------------+
+| Ord_no | Purchase_Amt | Ord_Date   | Cust_id | Salesman_id |
++--------+--------------+------------+---------+-------------+
+| 1      | 2000         | 2021-12-02 | 2       | 1000        |
+| 2      | 4000         | 2021-11-02 | 3       | 1000        |
+| 3      | 1000         | 2021-10-02 | 1       | 1004        |
+| 4      | 1300         | 2021-09-02 | 4       | 1003        |
+| 5      | 4500         | 2021-11-09 | 2       | 1000        |
+| 6      | 9000         | 2021-12-02 | 2       | 1000        |
++--------+--------------+------------+---------+-------------+
+6 rows in set (0.00 sec)
+
+Query-1:
+mysql> Select Grade,COUNT(distinct Cust_id) as Total_CUST from CUST Group by Grade having Grade >(Select avg(Grade) from CUST where city="Bengalure");
+
++-------+------------+
+| Grade | Total_CUST |
++-------+------------+
+|    13 |          1 |
+|    18 |          1 |
++-------+------------+
+2 rows in set (0.01 sec)
+
+Query-2:
+mysql> select s.Salesman_id,s.Name from Salesman s where(Select count(*) from CUST c where s.Salesman_id=c.Salesman_id)>1;
++-------------+------+
+| Salesman_id | Name |
++-------------+------+
+| 1000        | Abhi |
++-------------+------+
+1 row in set (0.00 sec)
+
+QUERY-3:
+mysql> (select s.Salesman_id,s.Name,c.Cust_name,s.city,s.Commission from Salesman s,CUST c where s.Salesman_id = c.Salesman_id and s.city = c.city) UNION (Select s1.Salesman_id,s1.Name,"No Match",s1.city,s1.Commission from Salesman s1,CUST c1 where s1.Salesman_id=c1.Salesman_id and s1.city <> c1.city);
++-------------+--------+-----------+-----------+------------+
+| Salesman_id | Name   | Cust_name | city      | Commission |
++-------------+--------+-----------+-----------+------------+
+| 1000        | Abhi   | BBB       | Bengalure | 5%         |
+| 1000        | Abhi   | CCC       | Bengalure | 5%         |
+| 1003        | Chinnu | No Match  | Mysore    | 3%         |
+| 1002        | Ajay   | No Match  | Bengalure | 6%         |
+| 1004        | Adam   | No Match  | Belgaum   | 4%         |
++-------------+--------+-----------+-----------+------------+
+5 rows in set (0.00 sec)
+
+4TH QUERY:-
+mysql> Create view TOPSALESMAN as select o.Ord_Date,o.Purchase_Amt,s.Salesman_id,s.Name from Salesman s, ORDERS o where s.Salesman_id=o.Salesman_id and o.Purchase_Amt=(Select MAX(o1.Purchase_Amt) from ORDERS o1 where o.Ord_Date = o1.Ord_Date);
+Query OK, 0 rows affected (0.19 sec)
+
+mysql> select *from TOPSALESMAN;
++------------+--------------+-------------+--------+
+| Ord_Date   | Purchase_Amt | Salesman_id | Name   |
++------------+--------------+-------------+--------+
+| 2021-11-02 | 4000         | 1000        | Abhi   |
+| 2021-10-02 | 1000         | 1004        | Adam   |
+| 2021-09-02 | 1300         | 1003        | Chinnu |
+| 2021-11-09 | 4500         | 1000        | Abhi   |
+| 2021-12-02 | 9000         | 1000        | Abhi   |
++------------+--------------+-------------+--------+
+5 rows in set (0.00 sec)
+
+5TH QUERY:
+mysql> delete from Salesman where Salesman_id = '1000';
+Query OK, 1 row affected (0.14 sec)
+
+mysql> select *from Salesman;
++-------------+--------+-----------+------------+
+| Salesman_id | Name   | city      | Commission |
++-------------+--------+-----------+------------+
+| 1001        | Akhi   | Bengalure | 3%         |
+| 1002        | Ajay   | Bengalure | 6%         |
+| 1003        | Chinnu | Mysore    | 3%         |
+| 1004        | Adam   | Belgaum   | 4%         |
+| 1005        | Fayaz  | Bijapur   | 10%        |
++-------------+--------+-----------+------------+
+5 rows in set (0.00 sec)
+
+mysql> select *from ORDERS;
++--------+--------------+------------+---------+-------------+
+| Ord_no | Purchase_Amt | Ord_Date   | Cust_id | Salesman_id |
++--------+--------------+------------+---------+-------------+
+| 3      | 1000         | 2021-10-02 | 1       | 1004        |
+| 4      | 1300         | 2021-09-02 | 4       | 1003        |
++--------+--------------+------------+---------+-------------+
+2 rows in set (0.00 sec)
+
+mysql> select *from CUST;
++---------+-----------+-----------+-------+-------------+
+| Cust_id | Cust_name | city      | Grade | Salesman_id |
++---------+-----------+-----------+-------+-------------+
+| 1       | AAA       | Bijapur   |    18 | 1003        |
+| 2       | BBB       | Bengalure |    10 | NULL        |
+| 3       | CCC       | Bengalure |    10 | NULL        |
+| 4       | DDD       | Belgeum   |    13 | 1002        |
+| 5       | EEE       | Manglore  |     8 | 1004        |
++---------+-----------+-----------+-------+-------------+
+5 rows in set (0.00 sec)
+
+
+
